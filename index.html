@@ -40,17 +40,29 @@
                 margin-bottom: 10px;
             }
 
+            input {
+                text-transform: capitalize;
+            }
+
             .input h5 {
                 margin-bottom: 0;
             }
 
             h4 {
-                text-decoration: underline;
                 padding-bottom: 10px;
+                text-align: center;
+            }
+
+            .sort {
+                text-align: center;
             }
 
             li {
-                margin: 10px 0;
+                margin: 10px 0 15px;
+            }
+
+            li h5 {
+                padding-bottom: 7px;
             }
             
         </style>
@@ -63,7 +75,7 @@
             <div class="filter container">
                 <h5>Start here:</h5>
                 <form class="input">
-                    <input type="text" id="taskInput" placeholder="Task Name" /> <br />
+                    <input type="text" id="taskInput" placeholder="Task Name" autocomplete="off"/> <br />
 
                     <h5>Select the Deadline:</h5>
                     <select name="months">
@@ -121,7 +133,7 @@
                         <option value="2020">2020</option>
                     </select> <br />
 
-                    <button type="submit">Add</button>
+                    <button type="submit" id="addTask">Add</button>
                 </form>
             </div>
 
@@ -137,10 +149,12 @@
                     <li>
                         <h5>Task Name</h5>
 
+                        <h5>March 28, 2018</h5>
+
                         <div class="actions">
                             <button type="submit" class="edit">Edit</button>
                             <button type="submit" class="delete">Delete</button>
-                            <button type="submit" class="done">DOne</button>
+                            <button type="submit" class="done">Done</button>
                         </div>
                     </li>
 
@@ -165,6 +179,8 @@
                 <ol class="completedTasks">
                     <li>
                         <h5>Task Name</h5>
+
+                        <h5>June 13, 2018</h5>
 
                         <div class="actions">
                             <button type="submit" class="edit">Edit</button>
