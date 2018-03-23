@@ -62,6 +62,7 @@
             }
 
             li h5 {
+                text-transform: capitalize;
                 padding-bottom: 7px;
             }
             
@@ -74,7 +75,7 @@
 
             <div class="filter container">
                 <h5>Start here:</h5>
-                <form class="input">
+                <form id="addTask">
                     <input type="text" id="taskInput" placeholder="Task Name" autocomplete="off"/> <br />
 
                     <h5>Select the Deadline:</h5>
@@ -146,18 +147,7 @@
                 </div>
 
                 <ol id="incompleteTasks">
-                    <li>
-                        <h5>Task Name</h5>
-
-                        <h5>March 28, 2018</h5>
-
-                        <div class="actions">
-                            <button type="submit" class="edit">Edit</button>
-                            <button type="submit" class="delete">Delete</button>
-                            <button type="submit" class="done">Done</button>
-                        </div>
-                    </li>
-
+                    
                     <li>
                         <form class="edit-form">
                             <input type="text" value="Task Name" />
