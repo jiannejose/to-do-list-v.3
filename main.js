@@ -75,3 +75,15 @@ function incompleteTasksTemplate(task) {
     </li>
   `;
 }
+
+function rebindButtons(element) {
+  let deleteButton = element.querySelector('.delete');
+
+  deleteButton.addEventListener('click', deleteTask);
+}
+
+function deleteTask() {
+  console.log('hi');
+
+  rebindButtons(task);
+}
