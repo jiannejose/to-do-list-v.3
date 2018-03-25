@@ -49,16 +49,6 @@ function formatDate(date) {
   return `${monthNames[monthIndex]}, ${day}, ${year}`;
 }
 
-function renderIncompleteTask(task) {
-  let newElement = document.createElement('li');
-
-  newElement.classList.add('js-task-item');
-  newElement.setAttribute('data-index', task.id);
-
-  newElement.innerHTML = incompleteTasksTemplate(task);
-  incompleteTasks.appendChild(newElement);
-}
-
 function incompleteTasksTemplate(task) {
 
   incompleteTasks.innerHTML += `
@@ -76,6 +66,16 @@ function incompleteTasksTemplate(task) {
   `;
 }
 
+function renderIncompleteTask(task) {
+  let newElement = document.createElement('li');
+
+  newElement.classList.add('js-task-item');
+  newElement.setAttribute('data-index', task.id);
+
+  newElement.innerHTML = incompleteTasksTemplate(task);
+  incompleteTasks.appendChild(newElement);
+}
+
 function rebindButtons(element) {
   let deleteButton = element.querySelector('.delete');
 
@@ -83,7 +83,10 @@ function rebindButtons(element) {
 }
 
 function deleteTask() {
-  console.log('hi');
+  let grandParent = this.parentElement.parentElement;
+  let index = grandParent.getAttribute('data-index');
 
-  rebindButtons(task);
+  allTasks.pop(index);
+
+  grandParent.remove();
 }
