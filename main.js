@@ -31,7 +31,9 @@ function addTask(e) {
   });
 
   inputTask.value = '';
-  renderIncompleteTask(allTasks[index]);
+  incompleteTasksTemplate(allTasks[index]);
+
+  rebindButtons();
 }
 
 function formatDate(date) {
@@ -66,27 +68,40 @@ function incompleteTasksTemplate(task) {
   `;
 }
 
-function renderIncompleteTask(task) {
-  let newElement = document.createElement('li');
-
-  newElement.classList.add('js-task-item');
-  newElement.setAttribute('data-index', task.id);
-
-  newElement.innerHTML = incompleteTasksTemplate(task);
-  incompleteTasks.appendChild(newElement);
+function rebindButtons() {
+  deletingTask();
 }
 
-function rebindButtons(element) {
-  let deleteButton = element.querySelector('.delete');
+function deletingTask() {
+  let grandparentElement = this.parentElement.parentElement;
 
-  deleteButton.addEventListener('click', deleteTask);
+  console.log(grandparentElement);
 }
 
-function deleteTask() {
-  let grandParent = this.parentElement.parentElement;
-  let index = grandParent.getAttribute('data-index');
+// function rebindButtons(element) {
+//   let deleteButton = element.querySelector('.delete');
 
-  allTasks.pop(index);
+//   deleteButton.addEventListener('click', deleteTask);
+// }
 
-  grandParent.remove();
-}
+// function deleteTask() {
+//   let grandParent = this.parentElement.parentElement;
+//   let index = grandParent.getAttribute('data-index');
+
+//   console.log(grandParent);
+//   allTasks.pop(index);
+
+//   grandParent.remove();
+// }
+
+//function renderIncompleteTask(task) {
+//   let newElement = document.createElement('li');
+
+//   newElement.classList.add('js-task-item');
+//   newElement.setAttribute('data-index', task.id);
+
+//   newElement.innerHTML = incompleteTasksTemplate(task);
+//   incompleteTasks.appendChild(newElement);
+// }
+
+
