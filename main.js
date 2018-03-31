@@ -20,13 +20,11 @@ function addTask(event) {
   let day = daySelect[daySelect.selectedIndex].innerHTML;
   let year = yearSelect[yearSelect.selectedIndex].innerHTML;
 
-  let taskDeadline = new Date(`${month} ${day}, ${year}`);
-
   incompleteTasks.innerHTML += `
     <li>
         <h5>${taskName}</h5>
 
-        <h5>${taskDeadline}</h5>
+        <h5>${month}, ${day}, ${year}</h5>
 
         <div class="actions">
             <button type="submit" class="edit">Edit</button>
@@ -37,6 +35,22 @@ function addTask(event) {
   
   `;
 }
+
+function formatDate(date) {
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  let day = date.getDate();
+  let monthIndex = date.getMonth();
+  let year = date.getFullYear();
+
+  return `${monthNames[monthIndex]} ${day}, ${year}`
+}
+
+/* deleting task */
+
 
 
 
