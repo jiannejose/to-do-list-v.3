@@ -27,21 +27,9 @@ function addTask(event) {
     'is_completed': false,
   });
 
-  incompleteTasks.innerHTML += `
-    <li>
-        <h5>${taskName}</h5>
-
-        <h5>${formatDate(allTasks[nextIndex].due_date)}</h5>
-
-        <div class="actions">
-            <button type="submit" class="edit">Edit</button>
-            <button type="submit" class="delete">Delete</button>
-            <button type="submit" class="undo">Undo</button>
-        </div>
-    </li>
-  `;
-
   taskInput.value = '';
+
+  renderIncompleteTask(allTasks[nextIndex]);
   nextIndex++;
 }
 
@@ -59,6 +47,33 @@ function formatDate(date) {
 
   return `${monthNames[monthIndex]} ${day}, ${year}`;
 }
+
+function renderIncompleteTask(task) {
+
+  let newLi = document.createElement('li');
+  newLi.setAttribute('data-index', task.id);
+
+  newLi.innerHTML = incompleteTaskTemplate(task);
+  incompleteTasks.appendChild(newLi);
+
+}
+
+function incompleteTaskTemplate(task) {
+  return `
+        <h5>${task.name}</h5>
+
+        <h5>${formatDate(task.due_date)}</h5>
+
+        <div class="actions">
+            <button type="submit" class="edit">Edit</button>
+            <button type="submit" class="delete">Delete</button>
+            <button type="submit" class="undo">Undo</button>
+        </div>
+  `;
+}
+
+
+
 
 
 
