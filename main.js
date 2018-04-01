@@ -1,56 +1,64 @@
 let allTasks = [];
+let nextIndex = 0;
 
+let addTaskForm = document.getElementById('addTask');
 let incompleteTasks = document.getElementById('incompleteTasks');
 let completedTasks = document.getElementById('completedTasks');
 
-let addTaskForm = document.getElementById('addTask');
+let taskInput = document.getElementById('taskInput');
+let monthSelect = document.querySelector('[name="months"]');
+let daySelect = document.querySelector('[name="days"]');
+let yearSelect = document.querySelector('[name="years"]');
 
 addTaskForm.addEventListener('submit', addTask);
 
 function addTask(event) {
   event.preventDefault();
 
-  let taskName = document.getElementById('taskInput').value;
+  let taskName = taskInput.value;
+  let month = monthSelect[monthSelect.selectedIndex].value;
+  let day = daySelect[daySelect.selectedIndex].value;
+  let year = yearSelect[yearSelect.selectedIndex].value;
 
-  let monthSelect = document.querySelector('[name="months"]');
-  let daySelect = document.querySelector('[name="days"]');
-  let yearSelect = document.querySelector('[name="years"]');
- 
-  let month = monthSelect[monthSelect.selectedIndex].innerHTML;
-  let day = daySelect[daySelect.selectedIndex].innerHTML;
-  let year = yearSelect[yearSelect.selectedIndex].innerHTML;
+  allTasks.push({
+    'id': nextIndex,
+    'name': taskName,
+    'due_date': new Date(`${year}-${month}-${day}`),
+    'is_completed': false,
+  });
 
   incompleteTasks.innerHTML += `
     <li>
         <h5>${taskName}</h5>
 
-        <h5>${month}, ${day}, ${year}</h5>
+        <h5>${formatDate(allTasks[nextIndex].due_date)}</h5>
 
         <div class="actions">
             <button type="submit" class="edit">Edit</button>
             <button type="submit" class="delete">Delete</button>
-            <button type="submit" class="done">Done</button>
+            <button type="submit" class="undo">Undo</button>
         </div>
     </li>
-  
   `;
+
+  taskInput.value = '';
+  nextIndex++;
 }
 
 function formatDate(date) {
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+  var monthNames = [
+    "January", "February", "March",
+    "April", "May", "June", "July",
+    "August", "September", "October",
+    "November", "December"
   ];
 
-  let day = date.getDate();
-  let monthIndex = date.getMonth();
-  let year = date.getFullYear();
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
 
-  return `${monthNames[monthIndex]} ${day}, ${year}`
+  return `${monthNames[monthIndex]} ${day}, ${year}`;
 }
-
-/* deleting task */
-
 
 
 
@@ -93,41 +101,37 @@ function formatDate(date) {
 
 
 // let allTasks = [];
+// let nextIndex = 0;
 
-// let incompleteTasks = document.getElementById('incompleteTasks');
-// let completedTasks = document.getElementById('completedTasks');
+// let addTaskForm = document.getElementById('addTask');
+// let incompleteTasks = document.querySelector('.js-incomplete-tasks');
+// let completedTasks  = document.querySelector('.js-completed-tasks');
 
-// let submitForm = document.getElementById('addTask');
-// let inputTask = document.getElementById('taskInput');
-// let monthSelect = document.querySelector('[name="months"]');
-// let daySelect = document.querySelector('[name="day"]');
-// let yearSelect = document.querySelector('[name="year"]');
+// let taskInput   = addTaskForm.querySelector('[name="task"]');
+// let monthSelect = addTaskForm.querySelector('[name="month"]');
+// let daySelect   = addTaskForm.querySelector('[name="day"]');
+// let yearSelect  = addTaskForm.querySelector('[name="year"]');
 
-// inputTask.focus();
+// addTaskForm.addEventListener('submit', addTask);
 
-// submitForm.addEventListener('submit', addTask);
-
-// function addTask(e) {
-//   e.preventDefault();
-  
-//   let taskName = inputTask.value;
+// function addTask(event) {
+//   event.preventDefault();
+//   let task  = taskInput.value;
 //   let month = monthSelect[monthSelect.selectedIndex].value;
-//   let day = daySelect[daySelect.selectedIndex].value;
-//   let year = yearSelect[yearSelect.selectedIndex].value;
-
-//   let index = allTasks.length;
+//   let day   = daySelect[daySelect.selectedIndex].value;
+//   let year  = yearSelect[yearSelect.selectedIndex].value;
 
 //   allTasks.push({
-//     'id': index,
-//     'name': taskName,
+//     'id': nextIndex,
+//     'name': task,
 //     'due_date': new Date(`${year}-${month}-${day}`),
 //     'is_completed': false,
 //   });
 
-//   inputTask.value = '';
-//   incompleteTasksTemplate(allTasks[index]);
+//   taskInput.value = '';
 
-//   rebindButtons();
+//   renderIncompleteTask(allTasks[nextIndex]);
+//   nextIndex++;
 // }
 
 // function formatDate(date) {
@@ -138,64 +142,192 @@ function formatDate(date) {
 //     "November", "December"
 //   ];
 
-//   let day = date.getDate();
-//   let monthIndex = date.getMonth();
-//   let year = date.getFullYear();
+//   var day = date.getDate();
+//   var monthIndex = date.getMonth();
+//   var year = date.getFullYear();
 
-//   return `${monthNames[monthIndex]}, ${day}, ${year}`;
+//   return `${monthNames[monthIndex]} ${day}, ${year}`;
 // }
 
-// function incompleteTasksTemplate(task) {
 
-//   incompleteTasks.innerHTML += `
-//     <li>
-//         <h5>${task.name}</h5>
+// function renderIncompleteTask(task) {
+//   let newEl = document.createElement('li');
 
-//         <h5>${formatDate(task.due_date)}</h5>
+//   newEl.classList.add('js-task-item');
+//   newEl.setAttribute('data-index', task.id);
 
-//         <div class="actions">
-//             <button type="submit" class="edit">Edit</button>
-//             <button type="submit" class="delete">Delete</button>
-//             <button type="submit" class="done">Done</button>
-//         </div>
-//     </li>
+//   newEl.innerHTML = incompleteTemplate(task);
+//   incompleteTasks.appendChild(newEl);
+
+//   rebindButtons(newEl);
+// }
+
+// function incompleteTemplate(task) {
+//   return `
+//     <div>
+//         <h4>${task.name}</h4>
+//     </div>
+
+//     <div>
+//       ${formatDate(task.due_date)}
+//     </div>
+
+//     <div class="actions">
+//         <button class="js-edit">Edit</button>
+//         <button class="js-delete">Delete</button>
+//         <button class="js-done">Done</button>
+//     </div>
 //   `;
 // }
 
-// function rebindButtons() {
-//   deletingTask();
+// function completeTemplate(task) {
+//   return `
+//     <div>
+//         <h4>${task.name}</h4>
+//     </div>
+
+//     <div>
+//       ${formatDate(task.due_date)}
+//     </div>
+
+//     <div class="actions">
+//         <button class="js-edit">Edit</button>
+//         <button class="js-delete">Delete</button>
+//         <button class="js-undo">Undo</button>
+//     </div>
+//   `;
 // }
 
-// function deletingTask() {
-//   let grandparentElement = this.parentElement.parentElement;
+// function rebindButtons(element) {
+//   let deleteButton = element.querySelector('.js-delete');
+//   let doneButton = element.querySelector('.js-done');
+//   let undoButton = element.querySelector('.js-undo');
+//   let editButton = element.querySelector('.js-edit');
 
-//   console.log(grandparentElement);
+//   deleteButton.addEventListener('click', deleteTask);
+
+//   editButton.addEventListener('click', editTask);
+
+//   if(doneButton) {
+//     doneButton.addEventListener('click', doneTask);
+//   }
+
+//   if(undoButton) {
+//     undoButton.addEventListener('click', undoTask);
+//   }
 // }
 
-// // function rebindButtons(element) {
-// //   let deleteButton = element.querySelector('.delete');
+// function deleteTask() {
+//   let grandParent = this.parentElement.parentElement;
+//   let index = grandParent.getAttribute('data-index');
 
-// //   deleteButton.addEventListener('click', deleteTask);
-// // }
+//   allTasks.pop(index);
 
-// // function deleteTask() {
-// //   let grandParent = this.parentElement.parentElement;
-// //   let index = grandParent.getAttribute('data-index');
+//   grandParent.remove();
+// }
 
-// //   console.log(grandParent);
-// //   allTasks.pop(index);
+// function doneTask() {
+//   let grandParent = this.parentElement.parentElement;
+//   let index = grandParent.getAttribute('data-index');
+//   allTasks[index].is_completed = true;
 
-// //   grandParent.remove();
-// // }
+//   grandParent.remove();
+//   grandParent.innerHTML = completeTemplate(allTasks[index]);
 
-// //function renderIncompleteTask(task) {
-// //   let newElement = document.createElement('li');
+//   completedTasks.appendChild(grandParent);
 
-// //   newElement.classList.add('js-task-item');
-// //   newElement.setAttribute('data-index', task.id);
+//   rebindButtons(grandParent);
+// }
 
-// //   newElement.innerHTML = incompleteTasksTemplate(task);
-// //   incompleteTasks.appendChild(newElement);
-// // }
+// function undoTask() {
+//   let grandParent = this.parentElement.parentElement;
+//   let index = grandParent.getAttribute('data-index');
+//   allTasks[index].is_completed = false;
 
+//   grandParent.remove();
+//   grandParent.innerHTML = incompleteTemplate(allTasks[index]);
 
+//   incompleteTasks.appendChild(grandParent);
+
+//   rebindButtons(grandParent);
+// }
+
+// function editTask() {
+//   let grandParent = this.parentElement.parentElement;
+//   let index = grandParent.getAttribute('data-index');
+
+//   grandParent.innerHTML = `
+//     <div>
+//         <input type="text" value="${allTasks[index].name}" placeholder="Task...">
+//     </div>
+
+//     <div class="actions">
+//         <button class="js-save">Save</button>
+//     </div>
+//   `;
+
+//   let saveButton = grandParent.querySelector('.js-save');
+
+//   saveButton.addEventListener('click', updateTask);
+// }
+
+// function updateTask() {
+//   let grandParent = this.parentElement.parentElement;
+//   let taskList  = grandParent.parentElement;
+//   let inputTask = grandParent.querySelector('input[type="text"]').value;
+//   let index = grandParent.getAttribute('data-index');
+
+//   allTasks[index].name = inputTask;
+
+//   if(taskList.classList.contains('js-incomplete-tasks')) {
+//     grandParent.innerHTML = incompleteTemplate(allTasks[index]);
+//   } else if(taskList.classList.contains('js-completed-tasks')){
+//     grandParent.innerHTML = completeTemplate(allTasks[index]);
+//   }
+
+//   rebindButtons(grandParent);
+// }
+
+// function sortIncomplete(type = 'desc') {
+//   let incomplete = allTasks.filter(task => !task.is_completed);
+
+//   if (type == 'asc') {
+//     incomplete.sort((currentTask, nextTask) => currentTask.due_date > nextTask.due_date);
+//   } else {
+//     incomplete.sort((currentTask, nextTask) => currentTask.due_date < nextTask.due_date);
+//   }
+
+//   let sorted = [];
+
+//   incomplete.forEach(task => {
+//     sorted.push(incompleteTasks.querySelector(`[data-index="${task.id}"]`));
+//   });
+
+//   incompleteTasks.innerHTML = '';
+
+//   sorted.forEach(element => {
+//     incompleteTasks.appendChild(element);
+//   });
+// }
+
+// function sortCompleted(type = 'desc') {
+//   let completed = allTasks.filter(task => task.is_completed);
+
+//   if (type == 'asc') {
+//     completed.sort((currentTask, nextTask) => currentTask.due_date > nextTask.due_date);
+//   } else {
+//     completed.sort((currentTask, nextTask) => currentTask.due_date < nextTask.due_date);
+//   }
+
+//   let sorted = [];
+
+//   completed.forEach(task => {
+//     sorted.push(completedTasks.querySelector(`[data-index="${task.id}"]`));
+//   });
+
+//   completedTasks.innerHTML = '';
+
+//   sorted.forEach(element => {
+//     completedTasks.appendChild(element);
+//   });
+// }
