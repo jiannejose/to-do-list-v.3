@@ -56,6 +56,8 @@ function renderIncompleteTask(task) {
   newLi.innerHTML = incompleteTaskTemplate(task);
   incompleteTasks.appendChild(newLi);
 
+  rebindButtons(newLi);
+
 }
 
 function incompleteTaskTemplate(task) {
@@ -72,6 +74,23 @@ function incompleteTaskTemplate(task) {
   `;
 }
 
+function rebindButtons(element) {
+  let deleteButton = element.querySelector('.delete');
+
+  deleteButton.addEventListener('click', deleteTask);
+}
+
+/* deleting tasks */
+
+function deleteTask() {
+  let grandparentElement = this.parentElement.parentElement;
+  let taskIndex = grandparentElement.getAttribute('data-index');
+
+  allTasks.pop(taskIndex);
+
+  grandparentElement.remove();
+
+}
 
 
 
