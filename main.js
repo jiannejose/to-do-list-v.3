@@ -10,6 +10,8 @@ let monthSelect = document.querySelector('[name="months"]');
 let daySelect = document.querySelector('[name="days"]');
 let yearSelect = document.querySelector('[name="years"]');
 
+taskInput.focus();
+
 addTaskForm.addEventListener('submit', addTask);
 
 function addTask(event) {
@@ -69,6 +71,20 @@ function incompleteTaskTemplate(task) {
         <div class="actions">
             <button type="submit" class="edit">Edit</button>
             <button type="submit" class="delete">Delete</button>
+            <button type="submit" class="done">Done</button>
+        </div>
+  `;
+}
+
+function completedTaskTemplate(task) {
+  return `
+        <h5>${task.name}</h5>
+
+        <h5>${formatDate(task.due_date)}</h5>
+
+        <div class="actions">
+            <button type="submit" class="edit">Edit</button>
+            <button type="submit" class="delete">Delete</button>
             <button type="submit" class="undo">Undo</button>
         </div>
   `;
@@ -76,8 +92,13 @@ function incompleteTaskTemplate(task) {
 
 function rebindButtons(element) {
   let deleteButton = element.querySelector('.delete');
+  let doneButton = element.querySelector('.done');
 
   deleteButton.addEventListener('click', deleteTask);
+
+  if(doneButton) {
+    doneButton.addEventListener('click', doneTask);
+  }
 }
 
 /* deleting tasks */
@@ -91,6 +112,21 @@ function deleteTask() {
   grandparentElement.remove();
 
 }
+
+/* done task */
+function doneTask() {
+  let grandparentElement = this.parentElement.parentElement;
+  let taskIndex = grandparentElement.getAttribute('data-index');
+  allTasks[taskIndex].is_completed = true;
+
+  grandparentElement.remove();
+  grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskIndex]);
+
+  completedTasks.appendChild(grandparentElement);
+
+  rebindButtons(grandparentElement);
+}
+
 
 
 
