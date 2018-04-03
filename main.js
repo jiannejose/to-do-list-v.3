@@ -93,11 +93,16 @@ function completedTaskTemplate(task) {
 function rebindButtons(element) {
   let deleteButton = element.querySelector('.delete');
   let doneButton = element.querySelector('.done');
+  let undoButton = element.querySelector('.undo');
 
   deleteButton.addEventListener('click', deleteTask);
 
   if(doneButton) {
     doneButton.addEventListener('click', doneTask);
+  }
+
+  if(undoButton) {
+    undoButton.addEventListener('click', undoTask);
   }
 }
 
@@ -110,7 +115,6 @@ function deleteTask() {
   allTasks.pop(taskIndex);
 
   grandparentElement.remove();
-
 }
 
 /* done task */
@@ -118,6 +122,7 @@ function doneTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskIndex = grandparentElement.getAttribute('data-index');
   allTasks[taskIndex].is_completed = true;
+  console.log(allTasks[taskIndex]);
 
   grandparentElement.remove();
   grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskIndex]);
@@ -127,6 +132,19 @@ function doneTask() {
   rebindButtons(grandparentElement);
 }
 
+/* undo task */
+function undoTask() {
+  let grandparentElement = this.parentElement.parentElement;
+  let taskIndex = grandparentElement.getAttribute('data-index');
+  allTasks[taskIndex].is_completed = false;
+
+  grandparentElement.remove();
+  grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskIndex]);
+
+  incompleteTasks.appendChild(grandparentElement);
+
+  rebindButtons(grandparentElement);
+}
 
 
 
