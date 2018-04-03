@@ -94,8 +94,11 @@ function rebindButtons(element) {
   let deleteButton = element.querySelector('.delete');
   let doneButton = element.querySelector('.done');
   let undoButton = element.querySelector('.undo');
+  let editButton = element.querySelector('.edit');
 
   deleteButton.addEventListener('click', deleteTask);
+
+  editButton.addEventListener('click', editTask);
 
   if(doneButton) {
     doneButton.addEventListener('click', doneTask);
@@ -122,7 +125,6 @@ function doneTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskIndex = grandparentElement.getAttribute('data-index');
   allTasks[taskIndex].is_completed = true;
-  console.log(allTasks[taskIndex]);
 
   grandparentElement.remove();
   grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskIndex]);
@@ -147,8 +149,45 @@ function undoTask() {
 }
 
 
+/* edit task */
+function editTask() {
+  let grandparentElement = this.parentElement.parentElement;
+  let taskIndex = grandparentElement.getAttribute('data-index');
+  
+  grandparentElement.innerHTML = `
+    <form class="edit-form">
+        <input type="text" value="${allTasks[taskIndex].name}" class="inputNewName"/>
+        <button type="submit" class="save">Save</button>
+    </form>
+  `;
+
+grandparentElement.querySelector('.inputNewName').focus();
+
+let saveButton = grandparentElement.querySelector('.save');
+
+saveButton.addEventListener('click', saveTask);
+
+}
 
 
+function saveTask(e) {
+  e.preventDefault();
+  
+  let grandparentElement = this.parentElement.parentElement;
+  let taskIndex = grandparentElement.getAttribute('data-index');
+  let taskNewName = grandparentElement.querySelector('.inputNewName').value;
+  let taskList = grandparentElement.parentElement;
+  allTasks[taskIndex].name = taskNewName;
+
+  console.log(taskNewName);
+  if(taskList.id == 'incompleteTasks') {
+    grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskIndex]);
+  } else if(taskList.id == 'completedTasks') {
+    grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskIndex]);
+  }
+
+  rebindButtons(grandparentElement);
+}
 
 
 
