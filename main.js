@@ -29,6 +29,11 @@ function addTask(event) {
     'is_completed': false,
   });
 
+  if(taskInput.value == '') {
+    alert('Please enter a name of your task. :)');
+    return;
+  }
+
   taskInput.value = '';
 
   renderIncompleteTask(allTasks[nextIndex]);
@@ -189,41 +194,41 @@ function saveTask(e) {
   rebindButtons(grandparentElement);
 }
 
-/* testing for sort */
-function addTestData(name, date, isCompleted) {
-  allTasks.push({
-    id: nextIndex,
-    name: name,
-    due_date: date,
-    is_completed: isCompleted,
-  });
+// /* testing for sort */
+// function addTestData(name, date, isCompleted) {
+//   allTasks.push({
+//     id: nextIndex,
+//     name: name,
+//     due_date: date,
+//     is_completed: isCompleted,
+//   });
 
-  renderTestData(allTasks[nextIndex]);
-  nextIndex++;
-}
+//   renderTestData(allTasks[nextIndex]);
+//   nextIndex++;
+// }
 
-function renderTestData(task) {
+// function renderTestData(task) {
 
-  let newLi = document.createElement('li');
-  newLi.setAttribute('data-index', task.id);
+//   let newLi = document.createElement('li');
+//   newLi.setAttribute('data-index', task.id);
 
-  if(task.is_completed) {
-    newLi.innerHTML = completedTaskTemplate(task);
-    completedTasks.appendChild(newLi);
-  } else {
-    newLi.innerHTML = incompleteTaskTemplate(task);
-    incompleteTasks.appendChild(newLi);
-  }
+//   if(task.is_completed) {
+//     newLi.innerHTML = completedTaskTemplate(task);
+//     completedTasks.appendChild(newLi);
+//   } else {
+//     newLi.innerHTML = incompleteTaskTemplate(task);
+//     incompleteTasks.appendChild(newLi);
+//   }
 
-  rebindButtons(newLi);
+//   rebindButtons(newLi);
 
-}
+// }
 
-addTestData('Test 4', new Date('2019-03-28'), true);
-addTestData('Test 1', new Date('2018-04-05'), true);
-addTestData('Honey', new Date('2018-04-03'), false);
-addTestData('Test 3', new Date('2018-12-03'), true);
-addTestData('Test 2', new Date('2018-06-13'), true);
+// addTestData('Test 4', new Date('2019-03-28'), true);
+// addTestData('Test 1', new Date('2018-04-05'), true);
+// addTestData('Honey', new Date('2018-04-03'), false);
+// addTestData('Test 3', new Date('2018-12-03'), true);
+// addTestData('Test 2', new Date('2018-06-13'), true);
 
 
 /* sorting tasks */
