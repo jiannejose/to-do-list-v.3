@@ -149,7 +149,7 @@ function undoTask() {
 }
 
 
-/* edit task */
+/* editing task */
 function editTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskIndex = grandparentElement.getAttribute('data-index');
@@ -169,7 +169,7 @@ saveButton.addEventListener('click', saveTask);
 
 }
 
-
+/* saving task's new name */
 function saveTask(e) {
   e.preventDefault();
   
@@ -189,37 +189,101 @@ function saveTask(e) {
   rebindButtons(grandparentElement);
 }
 
+/* testing for sort */
+function addTestData(name, date, isCompleted) {
+  allTasks.push({
+    id: nextIndex,
+    name: name,
+    due_date: date,
+    is_completed: isCompleted,
+  });
+
+  renderTestData(allTasks[nextIndex]);
+  nextIndex++;
+}
+
+function renderTestData(task) {
+
+  let newLi = document.createElement('li');
+  newLi.setAttribute('data-index', task.id);
+
+  if(task.is_completed) {
+    newLi.innerHTML = completedTaskTemplate(task);
+    completedTasks.appendChild(newLi);
+  } else {
+    newLi.innerHTML = incompleteTaskTemplate(task);
+    incompleteTasks.appendChild(newLi);
+  }
+
+  rebindButtons(newLi);
+
+}
+
+addTestData('Test 4', new Date('2019-03-28'), true);
+addTestData('Test 1', new Date('2018-04-05'), true);
+addTestData('Honey', new Date('2018-04-03'), false);
+addTestData('Test 3', new Date('2018-12-03'), true);
+addTestData('Test 2', new Date('2018-06-13'), true);
 
 
+/* sorting tasks */
+let incAscButton = document.querySelector('.js-incomplete-asc');
+let incDescButton = document.querySelector('.js-incomplete-desc');
+let compAscButton = document.querySelector('.js-complete-asc');
+let compDescButton = document.querySelector('.js-complete-desc');
 
+incAscButton.addEventListener('click', sortIncomplete);
+incDescButton.addEventListener('click', sortIncomplete);
+compAscButton.addEventListener('click', sortCompleted);
+compDescButton.addEventListener('click', sortCompleted);
 
+function sortIncomplete() {
+  let sortType = this.getAttribute('data-sort-type');
+  let incomplete = allTasks.filter((task) => !task.is_completed);
 
+  if(sortType == 'ascending') {
+    incomplete.sort((currentTask, nextTask) => currentTask.due_date > nextTask.due_date);
+  } else if(sortType == 'descending') {
+    incomplete.sort((currentTask, nextTask) => currentTask.due_date < nextTask.due_date);
+  }
 
+  let sorted = [];
 
+  incomplete.forEach((task) => {
+    sorted.push(incompleteTasks.querySelector(`[data-index="${task.id}"]`));
+  });
 
+  incompleteTasks.innerHTML = '';
 
+  sorted.forEach((element) => {
+    incompleteTasks.appendChild(element);
+  });
 
+}
 
+function sortCompleted() {
+  let sortType = this.getAttribute('data-sort-type');
+  let completed = allTasks.filter((task) => task.is_completed);
 
+  if(sortType == "ascending") {
+    completed.sort((currentTask, nextTask) => currentTask.due_date > nextTask.due_date);
+  } else if(sortType == "descending") {
+    completed.sort((currentTask, nextTask) => currentTask.due_date < nextTask.due_date);
+  }
 
+  let sorted = [];
 
+  completed.forEach((task) => {
+    sorted.push(completedTasks.querySelector(`[data-index="${task.id}"]`));
+  });
+ 
+  completedTasks.innerHTML = '';
 
+  sorted.forEach((element) => {
+    completedTasks.appendChild(element);
+  });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 
@@ -416,9 +480,9 @@ function saveTask(e) {
 // }
 
 // function sortIncomplete(type = 'desc') {
-//   let incomplete = allTasks.filter(task => !task.is_completed);
+//   let incomplete = allTasks.filter((task) => !task.is_completed);
 
-//   if (type == 'asc') {
+//    if (type == 'asc') {
 //     incomplete.sort((currentTask, nextTask) => currentTask.due_date > nextTask.due_date);
 //   } else {
 //     incomplete.sort((currentTask, nextTask) => currentTask.due_date < nextTask.due_date);
@@ -426,13 +490,14 @@ function saveTask(e) {
 
 //   let sorted = [];
 
-//   incomplete.forEach(task => {
+//   incomplete.forEach((task) => {
 //     sorted.push(incompleteTasks.querySelector(`[data-index="${task.id}"]`));
 //   });
 
+//   console.log(sorted);
 //   incompleteTasks.innerHTML = '';
 
-//   sorted.forEach(element => {
+//   sorted.forEach((element) => {
 //     incompleteTasks.appendChild(element);
 //   });
 // }
