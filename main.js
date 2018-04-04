@@ -22,17 +22,17 @@ function addTask(event) {
   let day = daySelect[daySelect.selectedIndex].value;
   let year = yearSelect[yearSelect.selectedIndex].value;
 
+  if(taskInput.value == '') {
+    alert('Please enter a name of your task. :)');
+    return;
+  }
+
   allTasks.push({
     'id': nextIndex,
     'name': taskName,
     'due_date': new Date(`${year}-${month}-${day}`),
     'is_completed': false,
   });
-
-  if(taskInput.value == '') {
-    alert('Please enter a name of your task. :)');
-    return;
-  }
 
   taskInput.value = '';
 
