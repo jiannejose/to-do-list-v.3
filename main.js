@@ -14,6 +14,16 @@ taskInput.focus();
 
 addTaskForm.addEventListener('submit', addTask);
 
+
+class Task {
+  constructor(id, name, due_date, is_completed ) {
+    this.id = id;
+    this.name = name;
+    this.due_date = due_date;
+    this.is_completed = is_completed;
+  }
+}
+
 function addTask(event) {
   event.preventDefault();
 
@@ -27,12 +37,14 @@ function addTask(event) {
     return;
   }
 
-  allTasks.push({
-    'id': nextIndex,
-    'name': taskName,
-    'due_date': new Date(`${year}-${month}-${day}`),
-    'is_completed': false,
-  });
+  // allTasks.push({
+  //   'id': nextIndex,
+  //   'name': taskName,
+  //   'due_date': new Date(`${year}-${month}-${day}`),
+  //   'is_completed': false,
+  // });
+
+  allTasks.push(new Task(nextIndex, taskName, new Date(`${year}-${month}-${day}`), false));
 
   taskInput.value = '';
 
@@ -120,7 +132,7 @@ function deleteTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskIndex = grandparentElement.getAttribute('data-index');
 
-  allTasks.pop(taskIndex);
+  allTasks.splice(taskIndex, 1);
 
   grandparentElement.remove();
 }
@@ -129,6 +141,7 @@ function deleteTask() {
 function doneTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskIndex = grandparentElement.getAttribute('data-index');
+  console.log(allTasks[taskIndex]);
   allTasks[taskIndex].is_completed = true;
 
   grandparentElement.remove();
