@@ -12,6 +12,7 @@ let yearSelect = document.querySelector('[name="years"]');
 
 taskInput.focus();
 
+/* ADDING TASK START */
 addTaskForm.addEventListener('submit', addTask);
 
 function addTask(event) {
@@ -37,11 +38,11 @@ function addTask(event) {
   taskInput.value = '';
 
   let taskIndex = allTasks.findIndex((task) => task.id == nextId);
-  console.log(taskIndex);
   renderIncompleteTask(allTasks[taskIndex]);
   nextId++;
 }
 
+/* formating date */
 function formatDate(date) {
   var monthNames = [
     "January", "February", "March",
@@ -57,8 +58,8 @@ function formatDate(date) {
   return `${monthNames[monthIndex]} ${day}, ${year}`;
 }
 
+/* rendering added task */
 function renderIncompleteTask(task) {
-
   let newLi = document.createElement('li');
   newLi.setAttribute('data-id', task.id);
 
@@ -66,9 +67,9 @@ function renderIncompleteTask(task) {
   incompleteTasks.appendChild(newLi);
 
   rebindButtons(newLi);
-
 }
 
+/* incomplete task template */
 function incompleteTaskTemplate(task) {
   return `
     <h5>${task.name}</h5>
@@ -76,13 +77,16 @@ function incompleteTaskTemplate(task) {
     <h5>${formatDate(task.due_date)}</h5>
 
     <div class="actions">
-        <button type="submit" class="edit">Edit</button>
+        <button type="submit" class="edit">Edit Name</button>
         <button type="submit" class="delete">Delete</button>
-        <button type="submit" class="done">Done</button>
+        <button type="submit" class="done">Completed</button>
     </div>
   `;
 }
+/* ADDING TASK END */
 
+/* ACTIONS START */
+/* completed task template */
 function completedTaskTemplate(task) {
   return `
     <h5>${task.name}</h5>
@@ -90,13 +94,14 @@ function completedTaskTemplate(task) {
     <h5>${formatDate(task.due_date)}</h5>
 
     <div class="actions">
-        <button type="submit" class="edit">Edit</button>
+        <button type="submit" class="edit">Edit Name</button>
         <button type="submit" class="delete">Delete</button>
         <button type="submit" class="undo">Undo</button>
     </div>
   `;
 }
 
+/* rebinding buttons */
 function rebindButtons(element) {
   let deleteButton = element.querySelector('.delete');
   let doneButton = element.querySelector('.done');
@@ -116,8 +121,7 @@ function rebindButtons(element) {
   }
 }
 
-/* deleting tasks */
-
+/* DELETING TASKS */
 function deleteTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskId = grandparentElement.getAttribute('data-id');
@@ -128,7 +132,7 @@ function deleteTask() {
   grandparentElement.remove();
 }
 
-/* done task */
+/* DONE TASK */
 function doneTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskId = grandparentElement.getAttribute('data-id');
@@ -143,7 +147,7 @@ function doneTask() {
   rebindButtons(grandparentElement);
 }
 
-/* undo task */
+/* UNDO TASK */
 function undoTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskId = grandparentElement.getAttribute('data-id');
@@ -158,15 +162,15 @@ function undoTask() {
   rebindButtons(grandparentElement);
 }
 
-
-/* editing task */
+/* EDITING TASK NAME */
 function editTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskId = grandparentElement.getAttribute('data-id');
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
   
   grandparentElement.innerHTML = `
     <form class="edit-form">
-        <input type="text" value="${allTasks[taskId].name}" class="inputNewName"/>
+        <input type="text" value="${allTasks[taskIndex].name}" class="inputNewName"/>
         <button type="submit" class="save">Save</button>
     </form>
   `;
@@ -176,67 +180,66 @@ grandparentElement.querySelector('.inputNewName').focus();
 let saveButton = grandparentElement.querySelector('.save');
 
 saveButton.addEventListener('click', saveTask);
-
 }
 
-/* saving task's new name */
+/* SAVING TASK NEW NAME */
 function saveTask(e) {
   e.preventDefault();
   
   let grandparentElement = this.parentElement.parentElement;
   let taskId = grandparentElement.getAttribute('data-id');
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
   let taskNewName = grandparentElement.querySelector('.inputNewName').value;
   let taskList = grandparentElement.parentElement;
-  allTasks[taskId].name = taskNewName;
+  allTasks[taskIndex].name = taskNewName;
 
   if(taskList.id == 'incompleteTasks') {
-    grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskId]);
+    grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskIndex]);
   } else if(taskList.id == 'completedTasks') {
-    grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskId]);
+    grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskIndex]);
   }
 
   rebindButtons(grandparentElement);
 }
 
-/* testing for sort */
-function addTestData(name, date, isCompleted) {
-  allTasks.push({
-    id: nextId,
-    name: name,
-    due_date: date,
-    is_completed: isCompleted,
-  });
+// /* testing for sort */
+// function addTestData(name, date, isCompleted) {
+//   allTasks.push({
+//     id: nextId,
+//     name: name,
+//     due_date: date,
+//     is_completed: isCompleted,
+//   });
 
-  let taskIndex = allTasks.findIndex((task) => task.id == nextId);
-  renderTestData(allTasks[taskIndex]);
-  nextId++;
-}
+//   let taskIndex = allTasks.findIndex((task) => task.id == nextId);
+//   renderTestData(allTasks[taskIndex]);
+//   nextId++;
+// }
 
-function renderTestData(task) {
+// function renderTestData(task) {
 
-  let newLi = document.createElement('li');
-  newLi.setAttribute('data-id', task.id);
+//   let newLi = document.createElement('li');
+//   newLi.setAttribute('data-id', task.id);
 
-  if(task.is_completed) {
-    newLi.innerHTML = completedTaskTemplate(task);
-    completedTasks.appendChild(newLi);
-  } else {
-    newLi.innerHTML = incompleteTaskTemplate(task);
-    incompleteTasks.appendChild(newLi);
-  }
+//   if(task.is_completed) {
+//     newLi.innerHTML = completedTaskTemplate(task);
+//     completedTasks.appendChild(newLi);
+//   } else {
+//     newLi.innerHTML = incompleteTaskTemplate(task);
+//     incompleteTasks.appendChild(newLi);
+//   }
 
-  rebindButtons(newLi);
+//   rebindButtons(newLi);
 
-}
+// }
 
-addTestData('A', new Date('2019-03-28'), false);
-addTestData('B', new Date('2018-04-03'), false);
-addTestData('C', new Date('2018-04-05'), false);
-addTestData('D', new Date('2018-06-13'), false);
-addTestData('E', new Date('2018-12-03'), false);
+// addTestData('A', new Date('2019-03-28'), false);
+// addTestData('B', new Date('2018-04-03'), false);
+// addTestData('C', new Date('2018-04-05'), false);
+// addTestData('D', new Date('2018-06-13'), false);
+// addTestData('E', new Date('2018-12-03'), false);
 
-
-/* sorting tasks */
+/* SORTING TASKS */
 let incAscButton = document.querySelector('.js-incomplete-asc');
 let incDescButton = document.querySelector('.js-incomplete-desc');
 let compAscButton = document.querySelector('.js-complete-asc');
@@ -268,7 +271,6 @@ function sortIncomplete() {
   sorted.forEach((element) => {
     incompleteTasks.appendChild(element);
   }); 
-
 }
 
 function sortCompleted() {
@@ -292,5 +294,5 @@ function sortCompleted() {
   sorted.forEach((element) => {
     completedTasks.appendChild(element);
   });
-
 }
+/* ACTIONS END */
