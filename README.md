@@ -10,4 +10,4 @@ On this third version, I practiced the concept of [MVVM (Model-View-View Model)]
 MVVM facilitates a separation of development of the graphical user interface – be it via a markup language or GUI code – from development of the business logic or back-end logic (the data model). 
 
 
-There will be a version 4 wherein I will incorporate classes in JavaScript with ES6. (I'm currently studying about it.)
+There will be a version 3.1 wherein I will be incorporating Classes in JavaScript with ES6. (I'm currently studying about it.)
