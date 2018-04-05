@@ -132,10 +132,11 @@ function deleteTask() {
 function doneTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskId = grandparentElement.getAttribute('data-id');
-  allTasks[taskId].is_completed = true;
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
+  allTasks[taskIndex].is_completed = true;
 
   grandparentElement.remove();
-  grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskId]);
+  grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskIndex]);
 
   completedTasks.appendChild(grandparentElement);
 
@@ -146,10 +147,11 @@ function doneTask() {
 function undoTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskId = grandparentElement.getAttribute('data-id');
-  allTasks[taskId].is_completed = false;
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
+  allTasks[taskIndex].is_completed = false;
 
   grandparentElement.remove();
-  grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskId]);
+  grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskIndex]);
 
   incompleteTasks.appendChild(grandparentElement);
 
