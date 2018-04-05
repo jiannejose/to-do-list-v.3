@@ -1,5 +1,5 @@
 let allTasks = [];
-let nextIndex = 0;
+let nextId = 1;
 
 let addTaskForm = document.getElementById('addTask');
 let incompleteTasks = document.getElementById('incompleteTasks');
@@ -28,7 +28,7 @@ function addTask(event) {
   }
 
   allTasks.push({
-    'id': nextIndex,
+    'id': nextId,
     'name': taskName,
     'due_date': new Date(`${year}-${month}-${day}`),
     'is_completed': false,
@@ -36,8 +36,10 @@ function addTask(event) {
 
   taskInput.value = '';
 
-  renderIncompleteTask(allTasks[nextIndex]);
-  nextIndex++;
+  let taskIndex = allTasks.findIndex((task) => task.id == nextId);
+  console.log(taskIndex);
+  renderIncompleteTask(allTasks[taskIndex]);
+  nextId++;
 }
 
 function formatDate(date) {
@@ -58,7 +60,7 @@ function formatDate(date) {
 function renderIncompleteTask(task) {
 
   let newLi = document.createElement('li');
-  newLi.setAttribute('data-index', task.id);
+  newLi.setAttribute('data-id', task.id);
 
   newLi.innerHTML = incompleteTaskTemplate(task);
   incompleteTasks.appendChild(newLi);
@@ -69,29 +71,29 @@ function renderIncompleteTask(task) {
 
 function incompleteTaskTemplate(task) {
   return `
-        <h5>${task.name}</h5>
+    <h5>${task.name}</h5>
 
-        <h5>${formatDate(task.due_date)}</h5>
+    <h5>${formatDate(task.due_date)}</h5>
 
-        <div class="actions">
-            <button type="submit" class="edit">Edit</button>
-            <button type="submit" class="delete">Delete</button>
-            <button type="submit" class="done">Done</button>
-        </div>
+    <div class="actions">
+        <button type="submit" class="edit">Edit</button>
+        <button type="submit" class="delete">Delete</button>
+        <button type="submit" class="done">Done</button>
+    </div>
   `;
 }
 
 function completedTaskTemplate(task) {
   return `
-        <h5>${task.name}</h5>
+    <h5>${task.name}</h5>
 
-        <h5>${formatDate(task.due_date)}</h5>
+    <h5>${formatDate(task.due_date)}</h5>
 
-        <div class="actions">
-            <button type="submit" class="edit">Edit</button>
-            <button type="submit" class="delete">Delete</button>
-            <button type="submit" class="undo">Undo</button>
-        </div>
+    <div class="actions">
+        <button type="submit" class="edit">Edit</button>
+        <button type="submit" class="delete">Delete</button>
+        <button type="submit" class="undo">Undo</button>
+    </div>
   `;
 }
 
@@ -118,9 +120,10 @@ function rebindButtons(element) {
 
 function deleteTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-id');
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
 
-  allTasks.pop(taskIndex);
+  allTasks.splice(taskIndex, 1);
 
   grandparentElement.remove();
 }
@@ -128,11 +131,11 @@ function deleteTask() {
 /* done task */
 function doneTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
-  allTasks[taskIndex].is_completed = true;
+  let taskId = grandparentElement.getAttribute('data-id');
+  allTasks[taskId].is_completed = true;
 
   grandparentElement.remove();
-  grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskIndex]);
+  grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskId]);
 
   completedTasks.appendChild(grandparentElement);
 
@@ -142,11 +145,11 @@ function doneTask() {
 /* undo task */
 function undoTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
-  allTasks[taskIndex].is_completed = false;
+  let taskId = grandparentElement.getAttribute('data-id');
+  allTasks[taskId].is_completed = false;
 
   grandparentElement.remove();
-  grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskIndex]);
+  grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskId]);
 
   incompleteTasks.appendChild(grandparentElement);
 
@@ -157,11 +160,11 @@ function undoTask() {
 /* editing task */
 function editTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-id');
   
   grandparentElement.innerHTML = `
     <form class="edit-form">
-        <input type="text" value="${allTasks[taskIndex].name}" class="inputNewName"/>
+        <input type="text" value="${allTasks[taskId].name}" class="inputNewName"/>
         <button type="submit" class="save">Save</button>
     </form>
   `;
@@ -179,56 +182,56 @@ function saveTask(e) {
   e.preventDefault();
   
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-id');
   let taskNewName = grandparentElement.querySelector('.inputNewName').value;
   let taskList = grandparentElement.parentElement;
-  allTasks[taskIndex].name = taskNewName;
+  allTasks[taskId].name = taskNewName;
 
-  console.log(taskNewName);
   if(taskList.id == 'incompleteTasks') {
-    grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskIndex]);
+    grandparentElement.innerHTML = incompleteTaskTemplate(allTasks[taskId]);
   } else if(taskList.id == 'completedTasks') {
-    grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskIndex]);
+    grandparentElement.innerHTML = completedTaskTemplate(allTasks[taskId]);
   }
 
   rebindButtons(grandparentElement);
 }
 
-// /* testing for sort */
-// function addTestData(name, date, isCompleted) {
-//   allTasks.push({
-//     id: nextIndex,
-//     name: name,
-//     due_date: date,
-//     is_completed: isCompleted,
-//   });
+/* testing for sort */
+function addTestData(name, date, isCompleted) {
+  allTasks.push({
+    id: nextId,
+    name: name,
+    due_date: date,
+    is_completed: isCompleted,
+  });
 
-//   renderTestData(allTasks[nextIndex]);
-//   nextIndex++;
-// }
+  let taskIndex = allTasks.findIndex((task) => task.id == nextId);
+  renderTestData(allTasks[taskIndex]);
+  nextId++;
+}
 
-// function renderTestData(task) {
+function renderTestData(task) {
 
-//   let newLi = document.createElement('li');
-//   newLi.setAttribute('data-index', task.id);
+  let newLi = document.createElement('li');
+  newLi.setAttribute('data-id', task.id);
 
-//   if(task.is_completed) {
-//     newLi.innerHTML = completedTaskTemplate(task);
-//     completedTasks.appendChild(newLi);
-//   } else {
-//     newLi.innerHTML = incompleteTaskTemplate(task);
-//     incompleteTasks.appendChild(newLi);
-//   }
+  if(task.is_completed) {
+    newLi.innerHTML = completedTaskTemplate(task);
+    completedTasks.appendChild(newLi);
+  } else {
+    newLi.innerHTML = incompleteTaskTemplate(task);
+    incompleteTasks.appendChild(newLi);
+  }
 
-//   rebindButtons(newLi);
+  rebindButtons(newLi);
 
-// }
+}
 
-// addTestData('Test 4', new Date('2019-03-28'), true);
-// addTestData('Test 1', new Date('2018-04-05'), true);
-// addTestData('Honey', new Date('2018-04-03'), false);
-// addTestData('Test 3', new Date('2018-12-03'), true);
-// addTestData('Test 2', new Date('2018-06-13'), true);
+addTestData('A', new Date('2019-03-28'), false);
+addTestData('B', new Date('2018-04-03'), false);
+addTestData('C', new Date('2018-04-05'), false);
+addTestData('D', new Date('2018-06-13'), false);
+addTestData('E', new Date('2018-12-03'), false);
 
 
 /* sorting tasks */
@@ -255,14 +258,14 @@ function sortIncomplete() {
   let sorted = [];
 
   incomplete.forEach((task) => {
-    sorted.push(incompleteTasks.querySelector(`[data-index="${task.id}"]`));
+    sorted.push(incompleteTasks.querySelector(`[data-id="${task.id}"]`));
   });
 
   incompleteTasks.innerHTML = '';
 
   sorted.forEach((element) => {
     incompleteTasks.appendChild(element);
-  });
+  }); 
 
 }
 
@@ -279,7 +282,7 @@ function sortCompleted() {
   let sorted = [];
 
   completed.forEach((task) => {
-    sorted.push(completedTasks.querySelector(`[data-index="${task.id}"]`));
+    sorted.push(completedTasks.querySelector(`[data-id="${task.id}"]`));
   });
  
   completedTasks.innerHTML = '';
