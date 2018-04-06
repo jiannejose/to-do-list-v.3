@@ -1,5 +1,5 @@
 let allTasks = [];
-let nextIndex = 0;
+let nextId = 1;
 
 let addTaskForm = document.getElementById('addTask');
 let incompleteTasks = document.getElementById('incompleteTasks');
@@ -12,8 +12,8 @@ let yearSelect = document.querySelector('[name="years"]');
 
 taskInput.focus();
 
+/* ADDING TASK START */
 addTaskForm.addEventListener('submit', addTask);
-
 
 class Task {
   constructor(id, name, due_date, is_completed ) {
@@ -37,19 +37,13 @@ function addTask(event) {
     return;
   }
 
-  // allTasks.push({
-  //   'id': nextIndex,
-  //   'name': taskName,
-  //   'due_date': new Date(`${year}-${month}-${day}`),
-  //   'is_completed': false,
-  // });
-
-  allTasks.push(new Task(nextIndex, taskName, new Date(`${year}-${month}-${day}`), false));
+  allTasks.push(new Task(nextId, taskName, new Date(`${year}-${month}-${day}`), false));
 
   taskInput.value = '';
 
-  renderIncompleteTask(allTasks[nextIndex]);
-  nextIndex++;
+  let taskIndex = allTasks.findIndex((task) => task.id == nextId);
+  renderIncompleteTask(allTasks[taskIndex]);
+  nextId++;
 }
 
 function formatDate(date) {
@@ -210,14 +204,14 @@ function saveTask(e) {
 // /* testing for sort */
 // function addTestData(name, date, isCompleted) {
 //   allTasks.push({
-//     id: nextIndex,
+//     id: nextId,
 //     name: name,
 //     due_date: date,
 //     is_completed: isCompleted,
 //   });
 
-//   renderTestData(allTasks[nextIndex]);
-//   nextIndex++;
+//   renderTestData(allTasks[nextId]);
+//   nextId++;
 // }
 
 // function renderTestData(task) {
