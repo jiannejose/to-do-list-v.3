@@ -82,9 +82,9 @@ function incompleteTaskTemplate(task) {
         <h5>${formatDate(task.due_date)}</h5>
 
         <div class="actions">
-            <button type="submit" class="edit">Edit</button>
+            <button type="submit" class="edit">Edit Name</button>
             <button type="submit" class="delete">Delete</button>
-            <button type="submit" class="done">Done</button>
+            <button type="submit" class="done">Completed</button>
         </div>
   `;
 }
@@ -99,7 +99,7 @@ function completedTaskTemplate(task) {
         <h5>${formatDate(task.due_date)}</h5>
 
         <div class="actions">
-            <button type="submit" class="edit">Edit</button>
+            <button type="submit" class="edit">Edit Name</button>
             <button type="submit" class="delete">Delete</button>
             <button type="submit" class="undo">Undo</button>
         </div>
@@ -126,8 +126,7 @@ function rebindButtons(element) {
   }
 }
 
-/* deleting tasks */
-
+/* DELETING TASK */
 function deleteTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskId = grandparentElement.getAttribute('data-index');
@@ -138,11 +137,11 @@ function deleteTask() {
   grandparentElement.remove();
 }
 
-/* done task */
+/* DONE TASK */
 function doneTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
-  console.log(allTasks[taskIndex]);
+  let taskId = grandparentElement.getAttribute('data-index');
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
   allTasks[taskIndex].is_completed = true;
 
   grandparentElement.remove();
@@ -153,10 +152,11 @@ function doneTask() {
   rebindButtons(grandparentElement);
 }
 
-/* undo task */
+/* UNDO TASK */
 function undoTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-index');
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
   allTasks[taskIndex].is_completed = false;
 
   grandparentElement.remove();
@@ -168,7 +168,7 @@ function undoTask() {
 }
 
 
-/* editing task */
+/* EDITING TASK */
 function editTask() {
   let grandparentElement = this.parentElement.parentElement;
   let taskIndex = grandparentElement.getAttribute('data-index');
@@ -185,7 +185,6 @@ grandparentElement.querySelector('.inputNewName').focus();
 let saveButton = grandparentElement.querySelector('.save');
 
 saveButton.addEventListener('click', saveTask);
-
 }
 
 /* saving task's new name */
