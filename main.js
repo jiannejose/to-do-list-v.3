@@ -46,6 +46,7 @@ function addTask(event) {
   nextId++;
 }
 
+/* date formatting */
 function formatDate(date) {
   var monthNames = [
     "January", "February", "March",
@@ -61,8 +62,8 @@ function formatDate(date) {
   return `${monthNames[monthIndex]} ${day}, ${year}`;
 }
 
+/* rendering added task */
 function renderIncompleteTask(task) {
-
   let newLi = document.createElement('li');
   newLi.setAttribute('data-index', task.id);
 
@@ -73,6 +74,7 @@ function renderIncompleteTask(task) {
 
 }
 
+/* incomplete task template */
 function incompleteTaskTemplate(task) {
   return `
         <h5>${task.name}</h5>
@@ -86,7 +88,10 @@ function incompleteTaskTemplate(task) {
         </div>
   `;
 }
+/* ADDING TASK END */
 
+/* ACTIONS START */
+/* complete task template */
 function completedTaskTemplate(task) {
   return `
         <h5>${task.name}</h5>
@@ -101,6 +106,7 @@ function completedTaskTemplate(task) {
   `;
 }
 
+/* rebinding buttons */
 function rebindButtons(element) {
   let deleteButton = element.querySelector('.delete');
   let doneButton = element.querySelector('.done');
@@ -124,7 +130,8 @@ function rebindButtons(element) {
 
 function deleteTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-index');
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
 
   allTasks.splice(taskIndex, 1);
 
