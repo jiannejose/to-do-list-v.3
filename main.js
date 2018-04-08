@@ -65,7 +65,7 @@ function formatDate(date) {
 /* rendering added task */
 function renderIncompleteTask(task) {
   let newLi = document.createElement('li');
-  newLi.setAttribute('data-index', task.id);
+  newLi.setAttribute('data-id', task.id);
 
   newLi.innerHTML = incompleteTaskTemplate(task);
   incompleteTasks.appendChild(newLi);
@@ -129,7 +129,7 @@ function rebindButtons(element) {
 /* DELETING TASK */
 function deleteTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskId = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-id');
   let taskIndex = allTasks.findIndex((task) => task.id == taskId);
 
   allTasks.splice(taskIndex, 1);
@@ -140,7 +140,7 @@ function deleteTask() {
 /* DONE TASK */
 function doneTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskId = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-id');
   let taskIndex = allTasks.findIndex((task) => task.id == taskId);
   allTasks[taskIndex].is_completed = true;
 
@@ -155,7 +155,7 @@ function doneTask() {
 /* UNDO TASK */
 function undoTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskId = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-id');
   let taskIndex = allTasks.findIndex((task) => task.id == taskId);
   allTasks[taskIndex].is_completed = false;
 
@@ -171,7 +171,8 @@ function undoTask() {
 /* EDITING TASK */
 function editTask() {
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-id');
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
   
   grandparentElement.innerHTML = `
     <form class="edit-form">
@@ -192,9 +193,10 @@ function saveTask(e) {
   e.preventDefault();
   
   let grandparentElement = this.parentElement.parentElement;
-  let taskIndex = grandparentElement.getAttribute('data-index');
+  let taskId = grandparentElement.getAttribute('data-id');
   let taskNewName = grandparentElement.querySelector('.inputNewName').value;
   let taskList = grandparentElement.parentElement;
+  let taskIndex = allTasks.findIndex((task) => task.id == taskId);
   allTasks[taskIndex].name = taskNewName;
 
   console.log(taskNewName);
@@ -223,7 +225,7 @@ function saveTask(e) {
 // function renderTestData(task) {
 
 //   let newLi = document.createElement('li');
-//   newLi.setAttribute('data-index', task.id);
+//   newLi.setAttribute('data-id', task.id);
 
 //   if(task.is_completed) {
 //     newLi.innerHTML = completedTaskTemplate(task);
@@ -268,7 +270,7 @@ function sortIncomplete() {
   let sorted = [];
 
   incomplete.forEach((task) => {
-    sorted.push(incompleteTasks.querySelector(`[data-index="${task.id}"]`));
+    sorted.push(incompleteTasks.querySelector(`[data-id="${task.id}"]`));
   });
 
   incompleteTasks.innerHTML = '';
@@ -292,7 +294,7 @@ function sortCompleted() {
   let sorted = [];
 
   completed.forEach((task) => {
-    sorted.push(completedTasks.querySelector(`[data-index="${task.id}"]`));
+    sorted.push(completedTasks.querySelector(`[data-id="${task.id}"]`));
   });
  
   completedTasks.innerHTML = '';
